@@ -15,7 +15,7 @@ The syntax will be modified to include a *list_pattern* defined as below:
 primary_pattern
 	: list_pattern
 list_pattern
-	: '[' (subpattern (',' subpattern)* ','?)? ']'
+	: '[' (pattern (',' pattern)* ','?)? ']'
 ```
 
 **Pattern compatibility:** A *list_pattern* is compatible any type that conforms to the ***range indexer pattern***:
@@ -75,7 +75,7 @@ We can further extend the *slice_pattern* to be able to capture the skipped sequ
 
 ```antlr
 slice_pattern
-	: `..` pattern
+	: `..` pattern?
 ```
 
 So, a pattern of the form `expr is [1, ..var s, 3]` would be equivalent to the following code:
