@@ -18,7 +18,7 @@ list_pattern
 	: '[' (pattern (',' pattern)* ','?)? ']'
 ```
 
-**Pattern compatibility:** A *list_pattern* is compatible any type that conforms to the ***range indexer pattern***:
+**Pattern compatibility:** A *list_pattern* is compatible with any type that conforms to the ***range indexer pattern***:
 
 1. Has an accessible property getter that returns an `int` and has the name `Length` or `Count`
 2. Has an accessible indexer with a single `int` parameter
