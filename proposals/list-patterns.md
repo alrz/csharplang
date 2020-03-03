@@ -43,7 +43,7 @@ The syntax will be modified to include a *slice_pattern* defined as below:
 primary_pattern
 	: slice_pattern
 slice_pattern
-	: `..`
+	: '..'
 ```
 
 A *slice_pattern* is only permitted once and only directly in a *list_pattern* and discards ***zero or more*** elements. Note that it's possible to use a *slice_pattern* in a nested *list_pattern* e.g. `[.., [.., 1]]` will match `new int[][]{new[]{1}}`.
@@ -75,7 +75,7 @@ We can further extend the *slice_pattern* to be able to capture the skipped sequ
 
 ```antlr
 slice_pattern
-	: `..` pattern?
+	: '..' pattern?
 ```
 
 So, a pattern of the form `expr is [1, ..var s, 3]` would be equivalent to the following code:
@@ -91,3 +91,4 @@ expr.Length    is >= 2
 ## Questions
 
 - Should we support multi-dimensional (including non-zero-based) arrays?
+- Should we support a trailing designator to capture the input? e.g. `[] v`?
