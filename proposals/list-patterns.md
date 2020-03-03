@@ -75,7 +75,7 @@ We can further extend the *slice_pattern* to be able to capture the skipped sequ
 
 ```antlr
 slice_pattern
-	: '..' pattern?
+	: '..' unary_pattern?
 ```
 
 So, a pattern of the form `expr is [1, ..var s, 3]` would be equivalent to the following code:
