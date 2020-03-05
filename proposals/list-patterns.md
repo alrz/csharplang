@@ -92,3 +92,4 @@ expr.Length    is >= 2
 
 - Should we support multi-dimensional (including non-zero-based) arrays?
 - Should we support a trailing designator to capture the input? e.g. `[] v`?
+- Should we support `this[System.Index]` and `this[System.Range]` indexers?
