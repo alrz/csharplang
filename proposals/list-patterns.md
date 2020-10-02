@@ -94,3 +94,4 @@ expr.Length    is >= 2
 - Should we support `IEnumerable` types (including pattern-based and extension `GetEnumerator`)?
 - Should we support a trailing designator to capture the input? e.g. `[] v`?
 - Should we support `this[System.Index]` and `this[System.Range]` indexers?
+- Should we support matching an `object` with a type check for `IEnumerable`?
