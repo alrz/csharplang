@@ -22,7 +22,7 @@ list_pattern
 
 1. Has an accessible property getter that returns an `int` and has the name `Length` or `Count`
 2. Has an accessible indexer with a single `int` parameter
-3. Has an accessible `Slice` method that takes two `int` parameters (for slice patterns)
+3. Has an accessible `Slice` method that takes two `int` parameters (for slice subpatterns)
 
 This rule includes `T[]`,  `string`,  `Span<T>`, `ImmutableArray<T>` and more.
 
@@ -68,7 +68,7 @@ case [.., 1, _]: // expr.Length is >= 2 && expr[^2] is 1
 
 Note: the pattern `[..]` lowers to `expr.Length >= 0` so it would not be considered as a catch-all.
 
-### Slice patterns
+### Slice subpatterns
 
 We can further extend the *slice_pattern* to be able to capture the skipped sequence:
 
@@ -78,7 +78,7 @@ slice_pattern
 	: '..' unary_pattern?
 ```
 
-So, a pattern of the form `expr is [1, ..var s, 3]` would be equivalent to the following code:
+A pattern of the form `expr is [1, ..var s, 3]` would be equivalent to the following code:
 
 ```cs
 expr.Length    is >= 2
@@ -90,6 +90,7 @@ expr.Length    is >= 2
 
 ## Questions
 
-- Should we support multi-dimensional (including non-zero-based) arrays?
+- Should we support multi-dimensional arrays (including non-zero-based)?
+- Should we support `IEnumerable` types (including pattern-based and extension `GetEnumerator`)?
 - Should we support a trailing designator to capture the input? e.g. `[] v`?
 - Should we support `this[System.Index]` and `this[System.Range]` indexers?
