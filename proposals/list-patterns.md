@@ -87,11 +87,84 @@ expr.Length    is >= 2
 && expr[^1]    is 3
 ```
 
+### Additional types
+
+Beyond the pattern-based mechanism outlined above, there are an additional two set of types we can cover as a special case.
+
+#### Multi-dimensional arrays
+
+
+```cs
+array is [[1]]
+
+array.GetLength(0) == 1 &&
+array.GetLength(1) == 1 &&
+array[0, 0] is 1
+```
+All multi-dimensional arrays can be non-zero-based. We can either cut this support or either:
+
+1. Add a runtime helper to check if the array is zero-based across all dimensions.
+2. Call `GetLowerBound` and add it to each indexer access to pass the *correct* index.
+3. Assume all arrays are zero-based since that's the default for arrays created by `new` expressions.
+
+
+The following rules determine if a pattern is valid for a multi-dimensional array:
+- For an array of rank N, only N level of nested list-patterns are accepted.
+- Except for that last level, all subpatterns must be either a slice pattern without a subpattern (`..`) or a list-pattern.
+- For slice patterns, the usual rules apply - only permitted once and only directly inside the pattern.
+- All nested list-patterns must be of an exact or minimum size. Given X = the minimum or exact required length so far and Y = the new length from current nested list pattern, the expected size is calculated as follow:
+  ```
+  AtLeast(X) + AtLeast(Y) = AtLeast(Max(X, Y))
+  Exactly(X) + Exactly(Y) = Exactly(X) only if X==Y
+  Exactly(X) + AtLeast(Y) = Exactly(X) only if X>=Y
+  ```
+  Note: The presense of a slice pattern implies a minimum required length.
+#### Foreach-able types
+We can reuse `foreach` rules to determine if a type is viable for the match, so this includes pattern-based and extension `GetEnumerator`.
+
+```cs
+switch (expr)
+{
+    case [0]:    // e.MoveNext() && e.Current is 0 && !e.MoveNext()
+        break;
+    case [0, 1]: // e.MoveNext() && e.Current is 0 && e.MoveNext() && e.Current is 1 && !e.MoveNext()
+        break;
+}
+
+using (var e = expr.GetEnumerator())
+{
+    if (e.MoveNext())
+    {
+        var t0 = e.Current;
+        if (t0 is 0)
+        {
+            if (!e.MoveNext())
+            {
+                goto case0;
+            }
+            else
+            {
+                var t1 = e.Current;
+                if (t1 is 1)
+                {
+                    if (!e.MoveNext())
+                    {
+                        goto case1;
+                    }
+                }
+            }
+        }
+    }
+
+    goto @default;
+}
+```
+Like multi-dimensional arrays, we cannot support slice subpatterns, but we do permit `..` only as the last element in which case we simply omit the last call to `MoveNext`.
+
+Note: Unlike other types, `[..]` is actually considered as a catch-all here, since no tests will be emitted for such pattern.
 
 ## Questions
 
-- Should we support multi-dimensional arrays (including non-zero-based)?
-- Should we support `IEnumerable` types (including pattern-based and extension `GetEnumerator`)?
-- Should we support a trailing designator to capture the input? e.g. `[] v`?
+- Should we support a trailing designator to capture the input? e.g. `[] v`
 - Should we support `this[System.Index]` and `this[System.Range]` indexers?
 - Should we support matching an `object` with a type check for `IEnumerable`?
