@@ -10,12 +10,11 @@ The pattern syntax is modified as follow:
 
 ```antlr
 positional_pattern
-  : type? positional_pattern_clause length_pattern_clause? property_or_list_pattern_clause? simple_designation?
+  : type? positional_pattern_clause length_pattern_clause? property_and_list_pattern_clause? simple_designation?
   ;
 
-property_or_list_pattern_clause
-  : list_pattern_clause
-  | property_pattern_clause
+property_and_list_pattern_clause
+  : property_pattern_clause list_pattern_clause?
   ;
 
 property_pattern_clause
@@ -23,23 +22,15 @@ property_pattern_clause
   ;
 
 list_pattern_clause
-  : '{' pattern (',' pattern)* ','? '}'
-  ;
-
-length_pattern_clause
-  : '[' pattern ']'
-  ;
-
-length_pattern
-  : type? length_pattern_clause property_or_list_pattern_clause? simple_designation?
+  : '[' (pattern (',' pattern)* ','?)? ']'
   ;
 
 list_pattern
-  : type? list_pattern_clause simple_designation?
+  : list_pattern_clause simple_designation?
   ;
 
 property_pattern
-  : type? property_pattern_clause simple_designation?
+  : type? property_and_list_pattern_clause simple_designation?
   ;
 
 slice_pattern
@@ -48,7 +39,6 @@ slice_pattern
 
 primary_pattern
   : list_pattern
-  | length_pattern
   | slice_pattern
   | // all of the pattern forms previously defined
   ;
