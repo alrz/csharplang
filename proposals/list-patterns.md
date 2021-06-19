@@ -10,7 +10,7 @@ The pattern syntax is modified as follow:
 
 ```antlr
 positional_pattern
-  : type? positional_pattern_clause length_pattern_clause? property_and_list_pattern_clause? simple_designation?
+  : type? positional_pattern_clause property_and_list_pattern_clause? simple_designation?
   ;
 
 property_and_list_pattern_clause
